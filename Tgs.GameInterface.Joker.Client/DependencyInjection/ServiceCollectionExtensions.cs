@@ -9,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddGameInterfacePinnacleClient(
+    public static IServiceCollection AddGameInterfaceJokerClient(
         this IServiceCollection services,
         Action<GameInterfaceJokerClientOptions, IServiceProvider> configure)
         => services
