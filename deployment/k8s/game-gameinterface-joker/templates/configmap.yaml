@@ -11,7 +11,7 @@ data:
         "LogLevel": {
           "Default": "Warning",
           "Microsoft.AspNetCore": "Warning",
-          "Tgs.GameInterface.Pinnacle.Core": "Information"
+          "Tgs.GameInterface.Joker.Core": "Information"
         }
       },
       "Kestrel": {
