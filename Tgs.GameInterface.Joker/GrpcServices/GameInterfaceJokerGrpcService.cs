@@ -139,19 +139,21 @@ public class GameInterfaceJokerGrpcService : GameInterfaceJoker.GameInterfaceJok
         {
             NextId = result.NextId,
         };
-
-        reply.Items.AddRange(result.GameRecordInfos.Select(x => new Protos.GameRecordInfo
+        if (result.GameRecordInfos.Any())
         {
-            ExternalRoundId = x.ExternalRoundId,
-            ExternalGameId = x.ExternalGameId,
-            PlayerCode = x.PlayerCode,
-            ExternalCreatedOn = x.ExternalCreatedOn.ToTimestamp(),
-            ExternalClosedOn = x.ExternalClosedOn.ToTimestamp(),
-            Bet = x.Bet,
-            Settle = x.Settle,
-            WinLoss = x.WinLoss,
-            AdditionalData = x.AdditionalData
-        }));
+            reply.Items.AddRange(result.GameRecordInfos.Select(x => new Protos.GameRecordInfo
+            {
+                ExternalRoundId = x.ExternalRoundId,
+                ExternalGameId = x.ExternalGameId,
+                PlayerCode = x.PlayerCode,
+                ExternalCreatedOn = x.ExternalCreatedOn.ToTimestamp(),
+                ExternalClosedOn = x.ExternalClosedOn.ToTimestamp(),
+                Bet = x.Bet,
+                Settle = x.Settle,
+                WinLoss = x.WinLoss,
+                AdditionalData = x.AdditionalData
+            }));
+        }
 
         return reply;
     }
