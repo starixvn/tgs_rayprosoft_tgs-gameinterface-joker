@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.0.2</Version>
+		<Version>0.0.3</Version>
 		<Authors>Raypro</Authors>
 		<RootNamespace>Tgs.GameInterface.Joker.Client</RootNamespace>
 		<PackageId>Tgs.GameInterface.Joker.Client</PackageId>
@@ -18,7 +18,7 @@
 	<ItemGroup>
 		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.55.0" />
 		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.55.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.56.0">
+		<PackageReference Include="Grpc.Tools" Version="2.56.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

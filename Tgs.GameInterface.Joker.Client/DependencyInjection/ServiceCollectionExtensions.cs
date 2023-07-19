@@ -12,13 +12,16 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddGameInterfaceJokerClient(
         this IServiceCollection services,
         Action<GameInterfaceJokerClientOptions, IServiceProvider> configure)
-        => services
+    {
+        var isDns = false;
+        _ = services
             .AddOptions<GameInterfaceJokerClientOptions>()
             .Configure(configure)
             .Services
             .AddGrpcClient<GameInterfaceJoker.GameInterfaceJokerClient>((sp, configureClient) =>
             {
                 var options = sp.GetRequiredService<IOptions<GameInterfaceJokerClientOptions>>().Value;
+                isDns = options.BaseUrl.Scheme.Equals("dns", StringComparison.OrdinalIgnoreCase);
                 configureClient.Address = options.BaseUrl;
             })
             .ConfigureChannel((sp, configureChannel) =>
@@ -31,13 +34,22 @@ public static class ServiceCollectionExtensions
                     EnableMultipleHttp2Connections = true
                 };
                 configureChannel.HttpHandler = handler;
-                configureChannel.Credentials = ChannelCredentials.Insecure;
+                configureChannel.Credentials = isDns
+                ? ChannelCredentials.Insecure
+                : null;
             })
             .AddInterceptor<LoggingInterceptor>()
             .Services
-            //負載平衡時，效能很重要。 藉由快取位址，解析位址的延遲會從 gRPC 呼叫中排除。 進行第一個 gRPC 呼叫時，將會叫用解析程式，而後續的呼叫會使用快取。
-            .AddSingleton<ResolverFactory>(sp => new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(30)))
             .AddSingleton<DiagnosticsInterceptorOptions>()
             .AddSingleton<LoggingInterceptor>()
             .AddTransient<IGameInterfaceJokerClient, GameInterfaceJokerClient>();
+
+        if (isDns)
+        {
+            //負載平衡時，效能很重要。 藉由快取位址，解析位址的延遲會從 gRPC 呼叫中排除。 進行第一個 gRPC 呼叫時，將會叫用解析程式，而後續的呼叫會使用快取。
+            _ = services.AddSingleton<ResolverFactory>(sp => new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(30)));
+        }
+
+        return services;
+    }
 }
