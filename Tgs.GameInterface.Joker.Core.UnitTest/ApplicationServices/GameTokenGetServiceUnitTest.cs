@@ -19,19 +19,15 @@ public class GameTokenGetServiceUnitTest
         var client = new GameTokenGetService(
             fakeGameApiClient);
 
-        _ = await client
-            .GetAsync(
-               query)
-           .ConfigureAwait(false);
+        _ = await client.GetAsync(query);
 
         _ = await fakeGameApiClient
             .Received(1)
             .PlayGameAsync(
-                apiUrl: Arg.Is(query.ApiUrl),
-                appId: Arg.Is(query.AppId),
-                secretKey: Arg.Is(query.SecretKey),
-                username: Arg.Is(query.PlayerCode),
-                cancellationToken: Arg.Any<CancellationToken>())
-            .ConfigureAwait(false);
+            apiUrl: Arg.Is(query.ApiUrl),
+            appId: Arg.Is(query.AppId),
+            secretKey: Arg.Is(query.SecretKey),
+            username: Arg.Is(query.PlayerCode),
+            cancellationToken: Arg.Any<CancellationToken>());
     }
 }

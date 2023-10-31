@@ -49,13 +49,9 @@ public class GameRecordQueryUnitTest
         var client = new GameRecordQueryService(
             fakeGameApiClient);
 
-        var actual = await client
-            .GetAsync(
-               query)
-            .ConfigureAwait(false);
+        var actual = await client.GetAsync(query);
 
         Assert.NotNull(actual);
-
         Assert.True(actual.GameRecordInfos.Any());
         Assert.Equal(result.NextId, actual.NextId);
         Assert.Equal(result.Transactions.Single().OCode.ToString(), actual.GameRecordInfos.Single().ExternalRoundId);
@@ -112,10 +108,7 @@ public class GameRecordQueryUnitTest
         var client = new GameRecordQueryService(
             fakeGameApiClient);
 
-        var actual = await client
-            .GetAsync(
-               query)
-            .ConfigureAwait(false);
+        var actual = await client.GetAsync(query);
 
         Assert.NotNull(actual);
 

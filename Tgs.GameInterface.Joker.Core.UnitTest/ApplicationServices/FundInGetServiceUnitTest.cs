@@ -36,10 +36,7 @@ public class FundInGetServiceUnitTest
         var client = new FundInGetService(
             fakeGameApiClient);
 
-        var actual = await client
-            .GetAsync(
-               query)
-           .ConfigureAwait(false);
+        var actual = await client.GetAsync(query);
 
         Assert.NotNull(actual);
         Assert.Equal(result.RequestId, actual.RequestId);

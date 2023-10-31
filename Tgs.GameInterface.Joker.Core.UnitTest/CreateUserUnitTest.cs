@@ -63,7 +63,7 @@ public class CreateUserUnitTest
         _ = handler.Expect(HttpMethod.Post, url)
                 .WithQueryString("appid", appId)
                 .WithQueryString("signature", signature)
-                .WithContent(await content.ReadAsStringAsync().ConfigureAwait(false))
+                .WithContent(await content.ReadAsStringAsync())
                 .Respond(HttpStatusCode.OK, new StringContent(respondContent));
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
@@ -75,12 +75,10 @@ public class CreateUserUnitTest
             fakeSignatureUtensil,
             fakeHttpClient);
 
-        await client
-          .CreateUserAsync(
+        await client.CreateUserAsync(
             apiUrl: apiUrl,
             appId: appId,
             secretKey: secretKey,
-            username: username)
-          .ConfigureAwait(false);
+            username: username);
     }
 }

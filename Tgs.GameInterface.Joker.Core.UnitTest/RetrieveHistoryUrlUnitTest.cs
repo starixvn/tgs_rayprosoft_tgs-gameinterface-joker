@@ -67,7 +67,7 @@ public class RetrieveHistoryUrlUnitTest
         _ = handler.Expect(HttpMethod.Post, url)
                 .WithQueryString("appid", appId)
                 .WithQueryString("signature", signature)
-                .WithContent(await content.ReadAsStringAsync().ConfigureAwait(false))
+                .WithContent(await content.ReadAsStringAsync())
                 .Respond(HttpStatusCode.OK, new StringContent(respondContent));
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
@@ -79,15 +79,13 @@ public class RetrieveHistoryUrlUnitTest
             fakeSignatureUtensil,
             fakeHttpClient);
 
-        var actual = await client
-            .RetrieveHistoryUrlAsync(
-              apiUrl: apiUrl,
-              appId: appId,
-              secretKey: secretKey,
-              oCode: oCode,
-              gameType: gameType,
-              language: language)
-            .ConfigureAwait(false);
+        var actual = await client.RetrieveHistoryUrlAsync(
+            apiUrl: apiUrl,
+            appId: appId,
+            secretKey: secretKey,
+            oCode: oCode,
+            gameType: gameType,
+            language: language);
 
         Assert.NotNull(actual);
         Assert.Equal("//hs.gwp6868.net/History?Signature=XSwHzoWB0ko2HsbRjwLq8YTzjgU%3d&Key=qppiorex5ax4a&Timestamp=1685343480524&Lang=zh&TransactionOCode=xey6kurg58ufq", actual);

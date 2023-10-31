@@ -20,21 +20,17 @@ public class GameRecordDetailsQueryServiceUnitTest
         var client = new GameRecordDetailsQueryService(
             fakeGameApiClient);
 
-        _ = await client
-           .GetAsync(
-              query)
-          .ConfigureAwait(false);
+        _ = await client.GetAsync(query);
 
         _ = await fakeGameApiClient
            .Received(1)
            .RetrieveHistoryUrlAsync(
-                 apiUrl: Arg.Is(query.ApiUrl),
-                 appId: Arg.Is(query.AppId),
-                 secretKey: Arg.Is(query.SecretKey),
-                 oCode: Arg.Is(query.ExternalRoundId),
-                 gameType: "Game",
-                 language: Arg.Is(query.Language),
-                 cancellationToken: Arg.Any<CancellationToken>())
-           .ConfigureAwait(false);
+            apiUrl: Arg.Is(query.ApiUrl),
+            appId: Arg.Is(query.AppId),
+            secretKey: Arg.Is(query.SecretKey),
+            oCode: Arg.Is(query.ExternalRoundId),
+            gameType: "Game",
+            language: Arg.Is(query.Language),
+            cancellationToken: Arg.Any<CancellationToken>());
     }
 }

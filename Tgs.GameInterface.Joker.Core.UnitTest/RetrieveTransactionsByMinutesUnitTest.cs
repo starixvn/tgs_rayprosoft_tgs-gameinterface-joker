@@ -70,7 +70,7 @@ public class RetrieveTransactionsByMinutesUnitTest
                 .WithQueryString("appid", appId)
                 .WithQueryString("signature", signature)
                 .WithQueryString("timeZone", timeZone)
-                .WithContent(await content.ReadAsStringAsync().ConfigureAwait(false))
+                .WithContent(await content.ReadAsStringAsync())
                 .Respond(HttpStatusCode.OK, new StringContent(respondContent));
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
@@ -84,13 +84,12 @@ public class RetrieveTransactionsByMinutesUnitTest
 
         var actual = await client
             .RetrieveTransactionsByMinutesAsync(
-              apiUrl: apiUrl,
-              appId: appId,
-              secretKey: secretKey,
-              startDate: startDate,
-              endDate: endDate,
-              nextId: nextId)
-            .ConfigureAwait(false);
+            apiUrl: apiUrl,
+            appId: appId,
+            secretKey: secretKey,
+            startDate: startDate,
+            endDate: endDate,
+            nextId: nextId);
 
         Assert.NotNull(actual);
         Assert.Equal("eyIyMDIzMDUyNzE5NTkiOnsiQ3JlYXRlZFRpbWUiOiJmZTRmMTk0MC1mYzg1LTExZWQtYTcyNC1kNWEzMjY4YjlmNmIifX0=", actual.NextId);
@@ -156,7 +155,7 @@ public class RetrieveTransactionsByMinutesUnitTest
                 .WithQueryString("appid", appId)
                 .WithQueryString("signature", signature)
                 .WithQueryString("timeZone", timeZone)
-                .WithContent(await content.ReadAsStringAsync().ConfigureAwait(false))
+                .WithContent(await content.ReadAsStringAsync())
                 .Respond(HttpStatusCode.OK, new StringContent(respondContent));
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
@@ -168,15 +167,13 @@ public class RetrieveTransactionsByMinutesUnitTest
             fakeSignatureUtensil,
             fakeHttpClient);
 
-        var actual = await client
-            .RetrieveTransactionsByMinutesAsync(
-              apiUrl: apiUrl,
-              appId: appId,
-              secretKey: secretKey,
-              startDate: startDate,
-              endDate: endDate,
-              nextId: nextId)
-            .ConfigureAwait(false);
+        var actual = await client.RetrieveTransactionsByMinutesAsync(
+            apiUrl: apiUrl,
+            appId: appId,
+            secretKey: secretKey,
+            startDate: startDate,
+            endDate: endDate,
+            nextId: nextId);
 
         Assert.NotNull(actual);
         Assert.Equal("eyIyMDIzMDUyNzE5NTkiOnsiQ3JlYXRlZFRpbWUiOiJmZTRmMTk0MC1mYzg1LTExZWQtYTcyNC1kNWEzMjY4YjlmNmIifX0=", actual.NextId);
@@ -247,7 +244,7 @@ public class RetrieveTransactionsByMinutesUnitTest
                 .WithQueryString("appid", appId)
                 .WithQueryString("signature", signature)
                 .WithQueryString("timeZone", timeZone)
-                .WithContent(await content.ReadAsStringAsync().ConfigureAwait(false))
+                .WithContent(await content.ReadAsStringAsync())
                 .Respond(HttpStatusCode.OK, new StringContent(respondContent));
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
@@ -259,15 +256,13 @@ public class RetrieveTransactionsByMinutesUnitTest
             fakeSignatureUtensil,
             fakeHttpClient);
 
-        var actual = await client
-            .RetrieveTransactionsByMinutesAsync(
-              apiUrl: apiUrl,
-              appId: appId,
-              secretKey: secretKey,
-              startDate: startDate,
-              endDate: endDate,
-              nextId: nextId)
-            .ConfigureAwait(false);
+        var actual = await client.RetrieveTransactionsByMinutesAsync(
+            apiUrl: apiUrl,
+            appId: appId,
+            secretKey: secretKey,
+            startDate: startDate,
+            endDate: endDate,
+            nextId: nextId);
 
         Assert.NotNull(actual);
         Assert.Equal("eyIyMDIzMDUyOTE0NTEiOnsiQ3JlYXRlZFRpbWUiOiI0NmJkZTU0MS1mZGVkLTExZWQtYjM4ZS1iZmVlZjQzMjQ0OWIifX0=", actual.NextId);
@@ -338,7 +333,7 @@ public class RetrieveTransactionsByMinutesUnitTest
                 .WithQueryString("appid", appId)
                 .WithQueryString("signature", signature)
                 .WithQueryString("timeZone", timeZone)
-                .WithContent(await content.ReadAsStringAsync().ConfigureAwait(false))
+                .WithContent(await content.ReadAsStringAsync())
                 .Respond(HttpStatusCode.OK, new StringContent(respondContent));
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
@@ -350,15 +345,13 @@ public class RetrieveTransactionsByMinutesUnitTest
             fakeSignatureUtensil,
             fakeHttpClient);
 
-        var actual = await client
-            .RetrieveTransactionsByMinutesAsync(
-              apiUrl: apiUrl,
-              appId: appId,
-              secretKey: secretKey,
-              startDate: startDate,
-              endDate: endDate,
-              nextId: nextId)
-            .ConfigureAwait(false);
+        var actual = await client.RetrieveTransactionsByMinutesAsync(
+            apiUrl: apiUrl,
+            appId: appId,
+            secretKey: secretKey,
+            startDate: startDate,
+            endDate: endDate,
+            nextId: nextId);
 
         Assert.NotNull(actual);
         Assert.Equal("eyIyMDIzMDUyOTE0NTEiOnsiQ3JlYXRlZFRpbWUiOiI0NmJkZTU0MS1mZGVkLTExZWQtYjM4ZS1iZmVlZjQzMjQ0OWIifX0=", actual.NextId);
