@@ -2,28 +2,21 @@
 
 namespace Tgs.GameInterface.Joker.Core.ApplicationServices;
 
-internal class GameRecordQueryService : IGetService<GameRecordQuery, GameRecordResult>
+internal class GameRecordQueryService(
+    IGameApiClient client) : IGetService<GameRecordQuery, GameRecordResult>
 {
-    private readonly IGameApiClient _client;
-
-    public GameRecordQueryService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask<GameRecordResult> GetAsync(
         GameRecordQuery query,
          CancellationToken cancellationToken = default)
     {
-        var result = await _client
-            .RetrieveTransactionsByMinutesAsync(
-                apiUrl: query.ApiUrl,
-                appId: query.AppId,
-                secretKey: query.SecretKey,
-                startDate: query.StartTime,
-                endDate: query.EndTime,
-                nextId: query.NextId,
-                cancellationToken: cancellationToken)
+        var result = await client.RetrieveTransactionsByMinutesAsync(
+            apiUrl: query.ApiUrl,
+            appId: query.AppId,
+            secretKey: query.SecretKey,
+            startDate: query.StartTime,
+            endDate: query.EndTime,
+            nextId: query.NextId,
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         return new GameRecordResult(

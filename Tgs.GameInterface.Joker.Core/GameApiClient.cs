@@ -12,25 +12,12 @@ using Tgs.GameInterface.Joker.Core.Models;
 
 namespace Tgs.GameInterface.Joker.Core;
 
-internal class GameApiClient : IGameApiClient
+internal class GameApiClient(
+    ILogger<GameApiClient> logger,
+    ISystemClock systemClock,
+    ISignatureUtensil signatureUtensil,
+    HttpClient client) : IGameApiClient
 {
-    private readonly HttpClient _client;
-    private readonly ILogger<GameApiClient> _logger;
-    private readonly ISignatureUtensil _signatureUtensil;
-    private readonly ISystemClock _systemClock;
-
-    public GameApiClient(
-        ILogger<GameApiClient> logger,
-        ISystemClock systemClock,
-        ISignatureUtensil signatureUtensil,
-        HttpClient client)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
-        _signatureUtensil = signatureUtensil ?? throw new ArgumentNullException(nameof(signatureUtensil));
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask CreateUserAsync(
         Uri apiUrl,
         string appId,
@@ -47,13 +34,13 @@ internal class GameApiClient : IGameApiClient
                 writer.WriteStartObject();
                 writer.WriteString("Method", "CU");
                 writer.WriteString("Username", username);
-                writer.WriteNumber("Timestamp", _systemClock.CurrentTime.ToUnixTimeSeconds());
+                writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
                 writer.WriteEndObject();
             }
             parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
         }
 
-        var signature = _signatureUtensil
+        var signature = signatureUtensil
             .GenerateSignature(
                 source: parameters,
                 secretKey: secretKey);
@@ -96,13 +83,13 @@ internal class GameApiClient : IGameApiClient
                 writer.WriteString("Username", username);
                 writer.WriteString("RequestID", requestId);
                 writer.WriteNumber("Amount", amount);
-                writer.WriteNumber("Timestamp", _systemClock.CurrentTime.ToUnixTimeSeconds());
+                writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
                 writer.WriteEndObject();
             }
             parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
         }
 
-        var signature = _signatureUtensil
+        var signature = signatureUtensil
             .GenerateSignature(
                 source: parameters,
                 secretKey: secretKey);
@@ -142,13 +129,13 @@ internal class GameApiClient : IGameApiClient
                 writer.WriteStartObject();
                 writer.WriteString("Method", "GC");
                 writer.WriteString("Username", username);
-                writer.WriteNumber("Timestamp", _systemClock.CurrentTime.ToUnixTimeSeconds());
+                writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
                 writer.WriteEndObject();
             }
             parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
         }
 
-        var signature = _signatureUtensil
+        var signature = signatureUtensil
             .GenerateSignature(
                 source: parameters,
                 secretKey: secretKey);
@@ -191,13 +178,13 @@ internal class GameApiClient : IGameApiClient
                 writer.WriteStartObject();
                 writer.WriteString("Method", "PLAY");
                 writer.WriteString("Username", username);
-                writer.WriteNumber("Timestamp", _systemClock.CurrentTime.ToUnixTimeSeconds());
+                writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
                 writer.WriteEndObject();
             }
             parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
         }
 
-        var signature = _signatureUtensil
+        var signature = signatureUtensil
             .GenerateSignature(
                 source: parameters,
                 secretKey: secretKey);
@@ -239,13 +226,13 @@ internal class GameApiClient : IGameApiClient
                 writer.WriteString("OCode", oCode);
                 writer.WriteString("Type", gameType);
                 writer.WriteString("Language", language);
-                writer.WriteNumber("Timestamp", _systemClock.CurrentTime.ToUnixTimeSeconds());
+                writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
                 writer.WriteEndObject();
             }
             parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
         }
 
-        var signature = _signatureUtensil
+        var signature = signatureUtensil
             .GenerateSignature(
                 source: parameters,
                 secretKey: secretKey);
@@ -287,13 +274,13 @@ internal class GameApiClient : IGameApiClient
                 writer.WriteString("StartDate", startDate.UtcDateTime.ToString("yyyy-MM-dd HH:mm"));
                 writer.WriteString("EndDate", endDate.UtcDateTime.ToString("yyyy-MM-dd HH:mm"));
                 writer.WriteString("NextId", (string.IsNullOrEmpty(nextId) ? string.Empty : nextId));
-                writer.WriteNumber("Timestamp", _systemClock.CurrentTime.ToUnixTimeSeconds());
+                writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
                 writer.WriteEndObject();
             }
             parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
         }
 
-        var signature = _signatureUtensil
+        var signature = signatureUtensil
             .GenerateSignature(
                 source: parameters,
                 secretKey: secretKey);
@@ -329,7 +316,7 @@ internal class GameApiClient : IGameApiClient
 
         var games = JsonNode!["data"]?["Game"]?.AsArray();
 
-        if (games is not null && games.Any())
+        if (games is not null && games.Count != 0)
         {
             transactionResults.AddRange(games
                 .Where(x => x is not null)
@@ -349,7 +336,7 @@ internal class GameApiClient : IGameApiClient
 
         var jackpots = JsonNode["data"]?["Jackpot"]?.AsArray();
 
-        if (jackpots is not null && jackpots.Any())
+        if (jackpots is not null && jackpots.Count != 0)
         {
             transactionResults.AddRange(jackpots
                 .Where(x => x is not null)
@@ -369,7 +356,7 @@ internal class GameApiClient : IGameApiClient
 
         var competition = JsonNode["data"]?["Competition"]?.AsArray();
 
-        if (competition is not null && competition.Any())
+        if (competition is not null && competition.Count != 0)
         {
             transactionResults.AddRange(competition
                 .Where(x => x is not null)
@@ -389,7 +376,7 @@ internal class GameApiClient : IGameApiClient
 
         return new RetrieveTransactionsResult(
             tempNextId,
-           (transactionResults.Any()) ? transactionResults : Enumerable.Empty<TransactionResult>());
+           (transactionResults.Count != 0) ? transactionResults : Enumerable.Empty<TransactionResult>());
     }
 
     public async ValueTask SignOutUserAsync(
@@ -408,13 +395,13 @@ internal class GameApiClient : IGameApiClient
                 writer.WriteStartObject();
                 writer.WriteString("Method", "SO");
                 writer.WriteString("Username", username);
-                writer.WriteNumber("Timestamp", _systemClock.CurrentTime.ToUnixTimeSeconds());
+                writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
                 writer.WriteEndObject();
             }
             parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
         }
 
-        var signature = _signatureUtensil
+        var signature = signatureUtensil
             .GenerateSignature(
                 source: parameters,
                 secretKey: secretKey);
@@ -453,13 +440,13 @@ internal class GameApiClient : IGameApiClient
                 writer.WriteStartObject();
                 writer.WriteString("Method", "TCH");
                 writer.WriteString("RequestID", requestId);
-                writer.WriteNumber("Timestamp", _systemClock.CurrentTime.ToUnixTimeSeconds());
+                writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
                 writer.WriteEndObject();
             }
             parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
         }
 
-        var signature = _signatureUtensil
+        var signature = signatureUtensil
             .GenerateSignature(
                 source: parameters,
                 secretKey: secretKey);
@@ -499,13 +486,13 @@ internal class GameApiClient : IGameApiClient
                 writer.WriteString("Username", username);
                 writer.WriteString("RequestID", requestId);
                 writer.WriteNumber("Amount", -amount);
-                writer.WriteNumber("Timestamp", _systemClock.CurrentTime.ToUnixTimeSeconds());
+                writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
                 writer.WriteEndObject();
             }
             parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
         }
 
-        var signature = _signatureUtensil
+        var signature = signatureUtensil
             .GenerateSignature(
                 source: parameters,
                 secretKey: secretKey);
@@ -542,7 +529,7 @@ internal class GameApiClient : IGameApiClient
 
         var url = $"{apiUrl.OriginalString}?{queryStrings}";
         var content = new StringContent(parameters.ToJsonString(), Encoding.UTF8, MediaTypeNames.Application.Json);
-        var httpResponseMessage = await _client
+        var httpResponseMessage = await client
             .PostAsync(
                 requestUri: url,
                 content: content,
@@ -572,7 +559,7 @@ internal class GameApiClient : IGameApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
+        logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         return new(httpResponseMessage.IsSuccessStatusCode, httpResponseMessage.StatusCode, (!string.IsNullOrEmpty(responseMessage)) ? JsonNode.Parse(responseMessage) : null);
     }

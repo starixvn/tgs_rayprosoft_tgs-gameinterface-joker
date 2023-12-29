@@ -23,7 +23,7 @@ public class GameRecordQueryUnitTest
             NextId: "eyIyMDIzMDUyOTE0NTEiOnsiQ3JlYXRlZFRpbWUiOiI0NmJkZTU0MS1mZGVkLTExZWQtYjM4ZS1iZmVlZjQzMjQ0OWIifX0=",
             Transactions: new TransactionResult[]
             {
-                new TransactionResult(
+                new(
                     OCode: "qpp5fiarswx4a",
                     Username: "4UCMQPLXB029",
                     GameCode: "naagsa5ycfugq",
@@ -82,7 +82,7 @@ public class GameRecordQueryUnitTest
             NextId: "eyIyMDIzMDUyOTE0NTEiOnsiQ3JlYXRlZFRpbWUiOiI0NmJkZTU0MS1mZGVkLTExZWQtYjM4ZS1iZmVlZjQzMjQ0OWIifX0=",
             Transactions: new TransactionResult[]
             {
-                new TransactionResult(
+                new(
                     OCode: "qpp5ra4k5ax4a",
                     Username: "4UCMQPLXB029",
                     GameCode: "naagsa5ycfugq",

@@ -6,46 +6,21 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.Joker.GrpcServices;
 
-public class GameInterfaceJokerGrpcService : GameInterfaceJoker.GameInterfaceJokerBase
+public class GameInterfaceJokerGrpcService(
+    ILogger<GameInterfaceJokerGrpcService> logger,
+    IGetService<FundInQuery, FundResult> fundInService,
+    IGetService<FundOutQuery, FundResult> fundOutService,
+    IGetService<FundStatusQuery, bool> fundStatusService,
+    IGetService<GameRecordDetailsQuery, string> gameRecordDetailsService,
+    IGetService<GameRecordQuery, GameRecordResult> gameRecordService,
+    IGetService<GameTokenQuery, string> gameTokenService,
+    IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
+    ICommandService<PlayerCreateCommand> playerCreateService,
+    ICommandService<PlayerLogoutCommand> PlayerLogoutService) : GameInterfaceJoker.GameInterfaceJokerBase
 {
-    private readonly IGetService<FundInQuery, FundResult> _fundInService;
-    private readonly IGetService<FundOutQuery, FundResult> _fundOutService;
-    private readonly IGetService<FundStatusQuery, bool> _fundStatusService;
-    private readonly IGetService<GameRecordDetailsQuery, string> _gameRecordDetailsService;
-    private readonly IGetService<GameRecordQuery, GameRecordResult> _gameRecordService;
-    private readonly IGetService<GameTokenQuery, string> _gameTokenService;
-    private readonly ILogger<GameInterfaceJokerGrpcService> _logger;
-    private readonly IGetService<PlayerBalanceQuery, PlayerBalanceResult> _playerBalanceService;
-    private readonly ICommandService<PlayerCreateCommand> _playerCreateService;
-    private readonly ICommandService<PlayerLogoutCommand> _playerLogoutService;
-
-    public GameInterfaceJokerGrpcService(
-        ILogger<GameInterfaceJokerGrpcService> logger,
-        IGetService<FundInQuery, FundResult> fundInService,
-        IGetService<FundOutQuery, FundResult> fundOutService,
-        IGetService<FundStatusQuery, bool> fundStatusService,
-        IGetService<GameRecordDetailsQuery, string> gameRecordDetailsService,
-        IGetService<GameRecordQuery, GameRecordResult> gameRecordService,
-        IGetService<GameTokenQuery, string> gameTokenService,
-        IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
-        ICommandService<PlayerCreateCommand> playerCreateService,
-        ICommandService<PlayerLogoutCommand> PlayerLogoutService)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
-        _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
-        _fundStatusService = fundStatusService ?? throw new ArgumentNullException(nameof(fundStatusService));
-        _gameRecordDetailsService = gameRecordDetailsService ?? throw new ArgumentNullException(nameof(gameRecordDetailsService));
-        _gameRecordService = gameRecordService ?? throw new ArgumentNullException(nameof(gameRecordService));
-        _gameTokenService = gameTokenService ?? throw new ArgumentNullException(nameof(gameTokenService));
-        _playerBalanceService = playerBalanceService ?? throw new ArgumentNullException(nameof(playerBalanceService));
-        _playerCreateService = playerCreateService ?? throw new ArgumentNullException(nameof(playerCreateService));
-        _playerLogoutService = PlayerLogoutService ?? throw new ArgumentNullException(nameof(PlayerLogoutService));
-    }
-
     public override Task<CheckingServiceReply> CheckingService(CheckingServiceRequest request, ServerCallContext context)
     {
-        _logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
+        logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
 
         return Task.FromResult(new CheckingServiceReply
         {
@@ -63,7 +38,7 @@ public class GameInterfaceJokerGrpcService : GameInterfaceJoker.GameInterfaceJok
             TransactionId: request.TransactionId,
             Amount: request.Amount);
 
-        var result = await _fundInService
+        var result = await fundInService
             .GetAsync(
                 query: query,
                 cancellationToken: context.CancellationToken)
@@ -86,7 +61,7 @@ public class GameInterfaceJokerGrpcService : GameInterfaceJoker.GameInterfaceJok
             TransactionId: request.TransactionId,
             Amount: request.Amount);
 
-        var result = await _fundOutService
+        var result = await fundOutService
             .GetAsync(
                 query: query,
                 cancellationToken: context.CancellationToken)
@@ -107,7 +82,7 @@ public class GameInterfaceJokerGrpcService : GameInterfaceJoker.GameInterfaceJok
             SecretKey: request.SecretKey,
             TransactionId: request.TransactionId);
 
-        var result = await _fundStatusService
+        var result = await fundStatusService
             .GetAsync(
                 query: query,
                 cancellationToken: context.CancellationToken)
@@ -129,7 +104,7 @@ public class GameInterfaceJokerGrpcService : GameInterfaceJoker.GameInterfaceJok
             EndTime: request.EndTime.ToDateTimeOffset(),
             NextId: request.NextId);
 
-        var result = await _gameRecordService
+        var result = await gameRecordService
             .GetAsync(
                 query: query,
                 cancellationToken: context.CancellationToken)
@@ -165,7 +140,7 @@ public class GameInterfaceJokerGrpcService : GameInterfaceJoker.GameInterfaceJok
             ExternalRoundId: request.ExternalRoundId,
             Language: request.Language);
 
-        var result = await _gameRecordDetailsService
+        var result = await gameRecordDetailsService
             .GetAsync(
                 query: query,
                 cancellationToken: context.CancellationToken)
@@ -185,7 +160,7 @@ public class GameInterfaceJokerGrpcService : GameInterfaceJoker.GameInterfaceJok
             SecretKey: request.SecretKey,
             PlayerCode: request.PlayerCode);
 
-        var result = await _gameTokenService
+        var result = await gameTokenService
             .GetAsync(
                 query: query,
                 cancellationToken: context.CancellationToken)
@@ -205,7 +180,7 @@ public class GameInterfaceJokerGrpcService : GameInterfaceJoker.GameInterfaceJok
             SecretKey: request.SecretKey,
             PlayerCode: request.PlayerCode);
 
-        var result = await _playerBalanceService
+        var result = await playerBalanceService
             .GetAsync(
                 query: query,
                 cancellationToken: context.CancellationToken)
@@ -226,7 +201,7 @@ public class GameInterfaceJokerGrpcService : GameInterfaceJoker.GameInterfaceJok
             SecretKey: request.SecretKey,
             PlayerCode: request.PlayerCode);
 
-        await _playerCreateService
+        await playerCreateService
          .ExecuteAsync(
              command: command,
              cancellationToken: context.CancellationToken)
@@ -246,7 +221,7 @@ public class GameInterfaceJokerGrpcService : GameInterfaceJoker.GameInterfaceJok
             SecretKey: request.SecretKey,
             PlayerCode: request.PlayerCode);
 
-        await _playerLogoutService
+        await PlayerLogoutService
          .ExecuteAsync(
              command: command,
              cancellationToken: context.CancellationToken)

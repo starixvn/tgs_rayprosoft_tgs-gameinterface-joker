@@ -1,24 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.0.7</Version>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Version>0.0.8</Version>
 		<Authors>Raypro</Authors>
-		<RootNamespace>Tgs.GameInterface.Joker.Client</RootNamespace>
-		<PackageId>Tgs.GameInterface.Joker.Client</PackageId>
-		<Title>Tgs.GameInterface.Joker.Client</Title>
 		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-joker</PackageProjectUrl>
 		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-joker.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
+		<RootNamespace>Tgs.GameInterface.Joker.Client</RootNamespace>
+		<PackageId>Tgs.GameInterface.Joker.Client</PackageId>
+		<Title>Tgs.GameInterface.Joker.Client</Title>
+		<Description>Tgs.GameInterface.Joker.Client</Description>
 		<PackageTags>Tgs GameInterface Joker Client</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.58.0" />
-		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.58.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.59.0">
+		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.59.0" />
+		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.59.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.60.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -26,9 +30,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Protobuf Include="..\Tgs.GameInterface.Joker\Protos\gameinterfacejoker.proto" GrpcServices="Client">
-	    <Link>gameinterfacejoker.proto</Link>
-	  </Protobuf>
+		<Protobuf Include="..\Tgs.GameInterface.Joker\Protos\gameinterfacejoker.proto" GrpcServices="Client">
+			<Link>gameinterfacejoker.proto</Link>
+		</Protobuf>
 	</ItemGroup>
 
 </Project>

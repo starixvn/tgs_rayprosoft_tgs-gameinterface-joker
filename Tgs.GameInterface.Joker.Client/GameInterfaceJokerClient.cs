@@ -3,15 +3,9 @@ using Tgs.GameInterface.Joker.Protos;
 
 namespace Tgs.GameInterface.Joker.Client;
 
-internal class GameInterfaceJokerClient : IGameInterfaceJokerClient
+internal class GameInterfaceJokerClient(
+    GameInterfaceJoker.GameInterfaceJokerClient client) : IGameInterfaceJokerClient
 {
-    private readonly GameInterfaceJoker.GameInterfaceJokerClient _client;
-
-    public GameInterfaceJokerClient(GameInterfaceJoker.GameInterfaceJokerClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask<string> CheckingServiceAsync(
         string machineName,
         CancellationToken cancellationToken = default)
@@ -21,7 +15,7 @@ internal class GameInterfaceJokerClient : IGameInterfaceJokerClient
             MachineName = machineName,
         };
 
-        var reply = await _client
+        var reply = await client
             .CheckingServiceAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -49,7 +43,7 @@ internal class GameInterfaceJokerClient : IGameInterfaceJokerClient
             Amount = amount
         };
 
-        var reply = await _client
+        var reply = await client
             .FundInAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -77,7 +71,7 @@ internal class GameInterfaceJokerClient : IGameInterfaceJokerClient
             Amount = amount
         };
 
-        var reply = await _client
+        var reply = await client
             .FundOutAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -101,7 +95,7 @@ internal class GameInterfaceJokerClient : IGameInterfaceJokerClient
             TransactionId = transactionId
         };
 
-        var reply = await _client
+        var reply = await client
             .FundStatusAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -129,7 +123,7 @@ internal class GameInterfaceJokerClient : IGameInterfaceJokerClient
             NextId = nextId
         };
 
-        return await _client
+        return await client
             .GameRecordAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -153,7 +147,7 @@ internal class GameInterfaceJokerClient : IGameInterfaceJokerClient
             Language = language,
         };
 
-        var reply = await _client
+        var reply = await client
             .GameRecordDetailsAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -177,7 +171,7 @@ internal class GameInterfaceJokerClient : IGameInterfaceJokerClient
             PlayerCode = playerCode
         };
 
-        var reply = await _client
+        var reply = await client
             .GameTokenAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -201,7 +195,7 @@ internal class GameInterfaceJokerClient : IGameInterfaceJokerClient
             PlayerCode = playerCode
         };
 
-        return await _client
+        return await client
             .PlayerBalanceAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -223,7 +217,7 @@ internal class GameInterfaceJokerClient : IGameInterfaceJokerClient
             PlayerCode = playerCode
         };
 
-        _ = await _client
+        _ = await client
             .PlayerCreateAsync(
                request: request,
                cancellationToken: cancellationToken)
@@ -245,7 +239,7 @@ internal class GameInterfaceJokerClient : IGameInterfaceJokerClient
             PlayerCode = playerCode
         };
 
-        _ = await _client
+        _ = await client
             .PlayerLogoutAsync(
                request: request,
                cancellationToken: cancellationToken)

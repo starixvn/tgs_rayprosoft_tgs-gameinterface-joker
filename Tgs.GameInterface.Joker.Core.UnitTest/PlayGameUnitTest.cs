@@ -79,7 +79,7 @@ public class PlayGameUnitTest
             apiUrl: apiUrl,
             appId: appId,
             secretKey: secretKey,
-            username: username); 
+            username: username);
 
         Assert.NotNull(actual);
         Assert.Equal("xj7544h73dufq,THDT,THDT.4UCMQPLXB029", actual);
