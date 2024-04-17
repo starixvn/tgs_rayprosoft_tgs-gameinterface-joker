@@ -1,8 +1,6 @@
-﻿using System.Text.Json.Nodes;
-
-namespace Tgs.GameInterface.Joker.Core;
+﻿namespace Tgs.GameInterface.Joker.Core;
 
 public interface ISignatureUtensil
 {
-    public string GenerateSignature(JsonNode source, string secretKey);
+	public string GenerateSignature(System.Text.Json.Nodes.JsonNode source, string secretKey);
 }

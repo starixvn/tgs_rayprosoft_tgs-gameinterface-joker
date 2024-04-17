@@ -4,6 +4,6 @@ namespace Tgs.GameInterface.Joker.Client;
 
 public class DiagnosticsInterceptorOptions
 {
-    public ActivitySource InterceptorActivitySource { get; set; } =
-        new ActivitySource($"Tgs.GameInterface.Joker.Client.DiagnosticsInterceptor");
+	public ActivitySource InterceptorActivitySource { get; set; } =
+		new ActivitySource($"Tgs.GameInterface.Joker.Client.DiagnosticsInterceptor");
 }
