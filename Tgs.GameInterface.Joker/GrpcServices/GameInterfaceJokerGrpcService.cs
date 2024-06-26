@@ -47,7 +47,7 @@ public class GameInterfaceJokerGrpcService(
 		return new FundReply
 		{
 			RequestId = result.RequestId,
-			Res = result.Res
+			Resp = result.Resp
 		};
 	}
 
@@ -70,7 +70,7 @@ public class GameInterfaceJokerGrpcService(
 		return new FundReply
 		{
 			RequestId = result.RequestId,
-			Res = result.Res
+			Resp = result.Resp
 		};
 	}
 
@@ -126,7 +126,7 @@ public class GameInterfaceJokerGrpcService(
 			Settle = x.Settle,
 			WinLoss = x.WinLoss,
 			AdditionalData = x.AdditionalData
-		}) ?? Enumerable.Empty<Protos.GameRecordInfo>());
+		}) ?? []);
 
 		return reply;
 	}

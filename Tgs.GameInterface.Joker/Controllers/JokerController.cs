@@ -49,7 +49,7 @@ public class JokerController : ControllerBase
 
 		return new FundResultViewModel(
 			RequestId: result.RequestId,
-			Res: result.Res);
+			Resp: result.Resp);
 	}
 
 	/// <summary>
@@ -92,7 +92,7 @@ public class JokerController : ControllerBase
 
 		return new FundResultViewModel(
 			RequestId: result.RequestId,
-			Res: result.Res);
+			Resp: result.Resp);
 	}
 
 	/// <summary>

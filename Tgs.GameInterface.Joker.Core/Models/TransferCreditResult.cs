@@ -2,4 +2,4 @@
 
 public record TransferCreditResult(
 	string RequestId,
-	string Res);
+	string Resp);

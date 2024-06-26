@@ -15,10 +15,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Protos\gameinterfacejoker.proto" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="FluentdForward.OpenTelemetry.MessagePack" Version="0.3.8" />
 		<PackageReference Include="Grpc.AspNetCore" Version="2.63.0" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
@@ -40,10 +36,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Tgs.GameInterface.Joker.Core\Tgs.GameInterface.Joker.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Protobuf Include="Protos\gameinterfacejoker.proto" GrpcServices="Server" />
+	  <ProjectReference Include="..\Tgs.GameInterface.Joker.Protos\Tgs.GameInterface.Joker.Protos.csproj" />
 	</ItemGroup>
 
 </Project>
