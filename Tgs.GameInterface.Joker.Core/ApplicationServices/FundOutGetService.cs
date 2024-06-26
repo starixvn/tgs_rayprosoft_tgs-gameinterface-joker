@@ -19,6 +19,6 @@ internal class FundOutGetService(
 
 		return new FundResult(
 			RequestId: result.RequestId,
-			Res: result.Res);
+			Resp: result.Resp);
 	}
 }

@@ -2,4 +2,4 @@
 
 public record FundResultViewModel(
 	string RequestId,
-	string Res);
+	string Resp);

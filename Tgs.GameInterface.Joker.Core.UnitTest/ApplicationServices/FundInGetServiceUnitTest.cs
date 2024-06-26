@@ -21,7 +21,7 @@ public class FundInGetServiceUnitTest
 
 		var result = new TransferCreditResult(
 			RequestId: "01886638f0830000000107e78f2b8c75",
-			Res: "{\"RequestID\":\"01886638f0830000000107e78f2b8c75\",\"Username\":\"4UCMQPLXB029\",\"Time\":\"2023-05-29T14:36:22.3405013\\u002B08:00\",\"Credit\":0.0,\"BeforeCredit\":123.0,\"OutstandingCredit\":0.0}");
+			Resp: "{\"RequestID\":\"01886638f0830000000107e78f2b8c75\",\"Username\":\"4UCMQPLXB029\",\"Time\":\"2023-05-29T14:36:22.3405013\\u002B08:00\",\"Credit\":0.0,\"BeforeCredit\":123.0,\"OutstandingCredit\":0.0}");
 		_ = fakeGameApiClient
 			 .WithdrawAsync(
 				 apiUrl: Arg.Is(query.ApiUrl),
@@ -40,6 +40,6 @@ public class FundInGetServiceUnitTest
 
 		Assert.NotNull(actual);
 		Assert.Equal(result.RequestId, actual.RequestId);
-		Assert.Equal(result.Res, actual.Res);
+		Assert.Equal(result.Resp, actual.Resp);
 	}
 }

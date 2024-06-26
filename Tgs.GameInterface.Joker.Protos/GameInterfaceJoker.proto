@@ -5,7 +5,7 @@ import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "Tgs.GameInterface.Joker.Protos";
 
-package gameinterfacejoker;
+package GameInterfaceJoker;
 
 // The greeting service definition.
 service GameInterfaceJoker {
@@ -101,7 +101,7 @@ message PlayerBalanceReply {
 
 message FundReply {
 	string request_id = 1;
-	string res = 2;
+	string resp = 2;
 }
 
 message GameTokenReply{

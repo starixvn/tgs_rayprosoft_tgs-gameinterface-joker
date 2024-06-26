@@ -89,6 +89,6 @@ public class WithdrawUnitTest
 
 		Assert.NotNull(actual);
 		Assert.Equal(expected: requestId, actual: actual.RequestId);
-		Assert.Equal(expected: respondContent, actual: actual.Res);
+		Assert.Equal(expected: respondContent, actual: actual.Resp);
 	}
 }
