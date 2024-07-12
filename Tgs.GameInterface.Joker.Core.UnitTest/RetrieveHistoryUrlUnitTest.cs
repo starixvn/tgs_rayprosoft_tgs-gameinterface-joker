@@ -12,7 +12,7 @@ namespace Tgs.GameInterface.Joker.Core.UnitTest;
 public class RetrieveHistoryUrlUnitTest
 {
 	[Fact]
-	public async void Normal_Process()
+	public async Task Normal_Process()
 	{
 		var apiUrl = new Uri("https://w.api788.net/");
 		var appId = "THDT";
