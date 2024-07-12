@@ -12,7 +12,7 @@ namespace Tgs.GameInterface.Joker.Core.UnitTest;
 public class VerifyTransferCreditUnitTest
 {
 	[Fact]
-	public async void Normal_Process()
+	public async Task Normal_Process()
 	{
 		var apiUrl = new Uri("https://w.api788.net/");
 		var appId = "THDT";
@@ -87,7 +87,7 @@ public class VerifyTransferCreditUnitTest
 	}
 
 	[Fact]
-	public async void Not_Found()
+	public async Task Not_Found()
 	{
 		var apiUrl = new Uri("https://w.api788.net/");
 		var appId = "THDT";

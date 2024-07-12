@@ -12,7 +12,7 @@ namespace Tgs.GameInterface.Joker.Core.UnitTest;
 public class RetrieveTransactionsByMinutesUnitTest
 {
 	[Fact]
-	public async void Normal_Process()
+	public async Task Normal_Process()
 	{
 		var apiUrl = new Uri("https://w.api788.net/");
 		var appId = "THDT";
@@ -98,7 +98,7 @@ public class RetrieveTransactionsByMinutesUnitTest
 	}
 
 	[Fact]
-	public async void Normal_Process_Jackpot()
+	public async Task Normal_Process_Jackpot()
 	{
 		var apiUrl = new Uri("https://w.api788.net/");
 		var appId = "THDT";
@@ -188,7 +188,7 @@ public class RetrieveTransactionsByMinutesUnitTest
 	}
 
 	[Fact]
-	public async void Normal_Process_Lose()
+	public async Task Normal_Process_Lose()
 	{
 		var apiUrl = new Uri("https://w.api788.net/");
 		var appId = "THDT";
@@ -278,7 +278,7 @@ public class RetrieveTransactionsByMinutesUnitTest
 	}
 
 	[Fact]
-	public async void Normal_Process_Win()
+	public async Task Normal_Process_Win()
 	{
 		var apiUrl = new Uri("https://w.api788.net/");
 		var appId = "THDT";
