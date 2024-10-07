@@ -24,6 +24,41 @@ internal class GameInterfaceJokerClient(
 		return reply.MachineName;
 	}
 
+	public async ValueTask<DomainReply> DomainGetWhitelistAsync(Uri apiUrl, string appId, string secretKey, CancellationToken cancellationToken = default)
+		=> await client.DomainGetWhitelistAsync(
+			request: new DomainGetWhitelistRequest
+			{
+				ApiUrl = apiUrl.ToString(),
+				AppId = appId,
+				SecretKey = secretKey
+			},
+			cancellationToken: cancellationToken)
+		.ConfigureAwait(false);
+
+	public async ValueTask<DomainReply> DomainRegisterWhitelistAsync(Uri apiUrl, string appId, string secretKey, IEnumerable<string> domains, CancellationToken cancellationToken = default)
+		=> await client.DomainRegisterWhitelistAsync(
+			request: new DomainRegisterWhitelistRequest
+			{
+				ApiUrl = apiUrl.ToString(),
+				AppId = appId,
+				SecretKey = secretKey,
+				Domain = string.Join(",", domains)
+			},
+			cancellationToken: cancellationToken)
+		.ConfigureAwait(false);
+
+	public async ValueTask<DomainReply> DomainUnRegisterWhitelistAsync(Uri apiUrl, string appId, string secretKey, IEnumerable<string> domains, CancellationToken cancellationToken = default)
+		=> await client.DomainUnRegisterWhitelistAsync(
+			request: new DomainUnRegisterWhitelistRequest
+			{
+				ApiUrl = apiUrl.ToString(),
+				AppId = appId,
+				SecretKey = secretKey,
+				Domain = string.Join(",", domains)
+			},
+			cancellationToken: cancellationToken)
+		.ConfigureAwait(false);
+
 	public async ValueTask<FundReply> FundInAsync(
 		Uri apiUrl,
 		string appId,

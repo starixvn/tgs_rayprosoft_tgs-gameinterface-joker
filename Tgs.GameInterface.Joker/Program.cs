@@ -60,7 +60,9 @@ builder.Services.AddSwaggerGen(c =>
 	}
 });
 
-builder.Services.AddGameInterfaceCore();
+builder.Services
+	.AddSingleton(TimeProvider.System)
+	.AddGameInterfaceCore();
 
 builder.Services
 	.AddOpenTelemetry()

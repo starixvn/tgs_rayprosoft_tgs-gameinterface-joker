@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using System.Text.Json.Nodes;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Tgs.GameInterface.Joker.Core.ApplicationServices;
 using Tgs.GameInterface.Joker.Protos;
@@ -16,7 +17,10 @@ public class GameInterfaceJokerGrpcService(
 	IGetService<GameTokenQuery, string> gameTokenService,
 	IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
 	ICommandService<PlayerCreateCommand> playerCreateService,
-	ICommandService<PlayerLogoutCommand> PlayerLogoutService) : GameInterfaceJoker.GameInterfaceJokerBase
+	ICommandService<PlayerLogoutCommand> PlayerLogoutService,
+	IGetService<DomainGetWhitelistQuery, JsonNode> domainGetWhitelistService,
+	IGetService<DomainRegisterWhitelistQuery, JsonNode> domainRegisterWhitelistService,
+	IGetService<DomainUnRegisterWhitelistQuery, JsonNode> domainUnRegisterWhitelistService) : GameInterfaceJoker.GameInterfaceJokerBase
 {
 	public override Task<CheckingServiceReply> CheckingService(CheckingServiceRequest request, ServerCallContext context)
 	{
@@ -26,6 +30,68 @@ public class GameInterfaceJokerGrpcService(
 		{
 			MachineName = Environment.MachineName
 		});
+	}
+
+	public override async Task<DomainReply> DomainGetWhitelist(DomainGetWhitelistRequest request, ServerCallContext context)
+	{
+		var query = new DomainGetWhitelistQuery
+		{
+			ApiUrl = new(request.ApiUrl),
+			AppId = request.AppId,
+			SecretKey = request.SecretKey
+		};
+
+		var result = await domainGetWhitelistService.GetAsync(
+			query: query,
+			cancellationToken: context.CancellationToken)
+			.ConfigureAwait(false);
+
+		return new DomainReply
+		{
+			Resp = result.ToJsonString()
+		};
+	}
+
+	public override async Task<DomainReply> DomainRegisterWhitelist(DomainRegisterWhitelistRequest request, ServerCallContext context)
+	{
+		var query = new DomainRegisterWhitelistQuery
+		{
+			ApiUrl = new(request.ApiUrl),
+			AppId = request.AppId,
+			SecretKey = request.SecretKey,
+			Domains = request.Domain.Split(',')
+		};
+
+		var result = await domainRegisterWhitelistService.GetAsync(
+			query: query,
+			cancellationToken: context.CancellationToken)
+			.ConfigureAwait(false);
+
+		return new DomainReply
+		{
+			Resp = result.ToJsonString()
+		};
+	}
+
+	public override async Task<DomainReply> DomainUnRegisterWhitelist(DomainUnRegisterWhitelistRequest request, ServerCallContext context)
+	{
+		var query = new DomainUnRegisterWhitelistQuery
+		{
+			ApiUrl = new(request.ApiUrl),
+			AppId = request.AppId,
+			SecretKey = request.SecretKey,
+			Domains = request.Domain.Split(',')
+		};
+
+		var result = await domainUnRegisterWhitelistService.GetAsync(
+			query: query,
+			cancellationToken: context.CancellationToken)
+			.ConfigureAwait(false);
+
+		return new DomainReply
+		{
+			Resp = result.ToJsonString()
+		};
 	}
 
 	public override async Task<FundReply> FundIn(FundRequest request, ServerCallContext context)

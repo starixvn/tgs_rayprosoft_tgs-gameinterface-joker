@@ -19,12 +19,12 @@ public class VerifyTransferCreditUnitTest
 		var secretKey = "s5gawreoto5e1";
 		var requestId = "01886633af3f0000000107e78f2b8c75";
 
-		var fakeSystemClock = Substitute.For<ISystemClock>();
+		var fakeTimeProvider = Substitute.For<TimeProvider>();
 		var fakeSignatureUtensil = Substitute.For<ISignatureUtensil>();
 
 		var currentTime = DateTimeOffset.Parse("2023-05-29T11:24:18+08:00");
-		_ = fakeSystemClock
-			.CurrentTime
+		_ = fakeTimeProvider
+			.GetUtcNow()
 			.Returns(currentTime);
 
 		System.Text.Json.Nodes.JsonNode parameters;
@@ -71,7 +71,7 @@ public class VerifyTransferCreditUnitTest
 
 		var client = new GameApiClient(
 			fakeLog,
-			fakeSystemClock,
+			fakeTimeProvider,
 			fakeSignatureUtensil,
 			fakeHttpClient);
 
@@ -94,12 +94,12 @@ public class VerifyTransferCreditUnitTest
 		var secretKey = "s5gawreoto5e1";
 		var requestId = "01886633af3f0000000107e78f2b8c751";
 
-		var fakeSystemClock = Substitute.For<ISystemClock>();
+		var fakeTimeProvider = Substitute.For<TimeProvider>();
 		var fakeSignatureUtensil = Substitute.For<ISignatureUtensil>();
 
 		var currentTime = DateTimeOffset.Parse("2023-05-29T11:24:18+08:00");
-		_ = fakeSystemClock
-			.CurrentTime
+		_ = fakeTimeProvider
+			.GetUtcNow()
 			.Returns(currentTime);
 
 		System.Text.Json.Nodes.JsonNode parameters;
@@ -146,7 +146,7 @@ public class VerifyTransferCreditUnitTest
 
 		var client = new GameApiClient(
 			fakeLog,
-			fakeSystemClock,
+			fakeTimeProvider,
 			fakeSignatureUtensil,
 			fakeHttpClient);
 
