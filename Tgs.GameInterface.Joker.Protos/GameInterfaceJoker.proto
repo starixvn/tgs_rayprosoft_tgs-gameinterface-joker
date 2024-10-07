@@ -19,6 +19,9 @@ service GameInterfaceJoker {
   rpc GameToken (GameTokenRequest) returns (GameTokenReply);
   rpc GameRecord (GameRecordRequest) returns (GameRecordReply);
   rpc GameRecordDetails (GameRecordDetailsRequest) returns (GameRecordDetailsReply);
+  rpc DomainGetWhitelist (DomainGetWhitelistRequest) returns (DomainReply);
+  rpc DomainRegisterWhitelist (DomainRegisterWhitelistRequest) returns (DomainReply);
+  rpc DomainUnRegisterWhitelist (DomainUnRegisterWhitelistRequest) returns (DomainReply);
   rpc CheckingService(CheckingServiceRequest) returns (CheckingServiceReply);
 }
 
@@ -89,6 +92,26 @@ message CheckingServiceRequest{
     string machine_name = 1;
 }
 
+message DomainGetWhitelistRequest{
+	string api_url = 1;
+    string app_id = 2;
+    string secret_key = 3;
+}
+
+message DomainRegisterWhitelistRequest{
+	string api_url = 1;
+    string app_id = 2;
+    string secret_key = 3;
+	string domain = 4;
+}
+
+message DomainUnRegisterWhitelistRequest{
+	string api_url = 1;
+    string app_id = 2;
+    string secret_key = 3;
+	string domain = 4;
+}
+
 // The response message containing the greetings.
 message BaseReply {
 	bool state = 1;
@@ -131,4 +154,8 @@ message GameRecordDetailsReply {
 
 message CheckingServiceReply{
     string machine_name = 1;
+}
+
+message DomainReply{
+    string resp = 1;
 }

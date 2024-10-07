@@ -10,9 +10,6 @@ public static class ServiceCollectionExtensions
 		=> services
 		.AddHttpClient<IGameApiClient, GameApiClient>()
 		.Services
-		.RegisterAllServiceUtilityTypes(
-			Assembly.GetExecutingAssembly(),
-			ServiceLifetime.Transient)
-		.AddSingleton<ISignatureUtensil, SignatureUtensil>()
-		.AddSingleton<ISystemClock, SystemClock>();
+		.RegisterAllServiceUtilityTypes(Assembly.GetExecutingAssembly(), ServiceLifetime.Transient)
+		.AddSingleton<ISignatureUtensil, SignatureUtensil>();
 }

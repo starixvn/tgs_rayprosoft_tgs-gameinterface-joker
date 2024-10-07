@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json.Nodes;
+using Microsoft.AspNetCore.Mvc;
 using Tgs.GameInterface.Joker.Core.ApplicationServices;
 using Tgs.GameInterface.Joker.ViewModels;
 using Tgs.ServiceUtility;
@@ -361,4 +362,87 @@ public class JokerController : ControllerBase
 				command: command,
 				cancellationToken: HttpContext.RequestAborted);
 	}
+
+	/// <summary>
+	/// Domains the get whitelist asynchronous.
+	/// </summary>
+	/// <param name="service">The service.</param>
+	/// <param name="source">The source.</param>
+	/// <returns></returns>
+	/// <remarks>
+	/// <b>Example</b><br />
+	///
+	///     Post
+	///
+	///         {
+	///				"apiUrl": "https://w.api788.net/",
+	///				"appId": "THDT",
+	///				"secretKey": "s5gawreoto5e1"
+	///         }
+	/// </remarks>
+	[HttpPost("domain/get-whitelist", Name = "DomainGetWhitelist")]
+	public ValueTask<JsonNode> DomainGetWhitelistAsync(
+		[FromServices] IGetService<DomainGetWhitelistQuery, JsonNode> service,
+		DomainGetWhitelistQuery source)
+		=> service.GetAsync(
+			query: source,
+			cancellationToken: HttpContext.RequestAborted);
+
+	/// <summary>
+	/// Domains the register whitelist asynchronous.
+	/// </summary>
+	/// <param name="service">The service.</param>
+	/// <param name="source">The source.</param>
+	/// <returns></returns>
+	/// <remarks>
+	/// <b>Example</b><br />
+	///
+	///     Post
+	///
+	///         {
+	///				"apiUrl": "https://w.api788.net/",
+	///				"appId": "THDT",
+	///				"secretKey": "s5gawreoto5e1",
+	///				"domains": [
+	///					"dev-t1.rpgp.cc",
+	///					"stg-t1.rpgp.cc"
+	///				]
+	///         }
+	/// </remarks>
+	[HttpPost("domain/register-whitelist", Name = "DomainRegisterWhitelist")]
+	public ValueTask<JsonNode> DomainRegisterWhitelistAsync(
+		[FromServices] IGetService<DomainRegisterWhitelistQuery, JsonNode> service,
+		DomainRegisterWhitelistQuery source)
+		=> service.GetAsync(
+			query: source,
+			cancellationToken: HttpContext.RequestAborted);
+
+	/// <summary>
+	/// Domains the un register whitelist asynchronous.
+	/// </summary>
+	/// <param name="service">The service.</param>
+	/// <param name="source">The source.</param>
+	/// <returns></returns>
+	/// <remarks>
+	/// <b>Example</b><br />
+	///
+	///     Post
+	///
+	///         {
+	///				"apiUrl": "https://w.api788.net/",
+	///				"appId": "THDT",
+	///				"secretKey": "s5gawreoto5e1",
+	///				"domains": [
+	///					"dev-t1.rpgp.cc",
+	///					"stg-t1.rpgp.cc"
+	///				]
+	///         }
+	/// </remarks>
+	[HttpPost("domain/unregister-whitelist", Name = "DomainUnRegisterWhitelist")]
+	public ValueTask<JsonNode> DomainUnRegisterWhitelistAsync(
+		[FromServices] IGetService<DomainUnRegisterWhitelistQuery, JsonNode> service,
+		DomainUnRegisterWhitelistQuery source)
+		=> service.GetAsync(
+			query: source,
+			cancellationToken: HttpContext.RequestAborted);
 }

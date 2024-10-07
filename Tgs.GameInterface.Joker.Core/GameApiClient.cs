@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Web;
 using Microsoft.Extensions.Logging;
 using Tgs.GameInterface.Joker.Core.Extensions;
@@ -13,18 +14,13 @@ namespace Tgs.GameInterface.Joker.Core;
 
 internal class GameApiClient(
 	ILogger<GameApiClient> logger,
-	ISystemClock systemClock,
+	TimeProvider timeProvider,
 	ISignatureUtensil signatureUtensil,
 	HttpClient client) : IGameApiClient
 {
-	public async ValueTask CreateUserAsync(
-		Uri apiUrl,
-		string appId,
-		string secretKey,
-		string username,
-		CancellationToken cancellationToken = default)
+	public async ValueTask CreateUserAsync(Uri apiUrl, string appId, string secretKey, string username, CancellationToken cancellationToken = default)
 	{
-		System.Text.Json.Nodes.JsonNode parameters;
+		var parameters = default(JsonNode);
 
 		using (var stream = new MemoryStream())
 		{
@@ -33,17 +29,14 @@ internal class GameApiClient(
 				writer.WriteStartObject();
 				writer.WriteString("Method", "CU");
 				writer.WriteString("Username", username);
-				writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
 				writer.WriteEndObject();
 			}
 
 			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
 		}
 
-		var signature = signatureUtensil
-			.GenerateSignature(
-				source: parameters,
-				secretKey: secretKey);
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
 
 		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
 		queryStrings.Add("appid", appId);
@@ -53,7 +46,7 @@ internal class GameApiClient(
 			apiUrl: apiUrl,
 			queryStrings: queryStrings,
 			parameters: parameters,
-			logPrefix: "CreateUser",
+			logPrefix: nameof(CreateUserAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
@@ -63,16 +56,9 @@ internal class GameApiClient(
 		}
 	}
 
-	public async ValueTask<TransferCreditResult> DepositAsync(
-		Uri apiUrl,
-		string appId,
-		string secretKey,
-		string username,
-		string requestId,
-		decimal amount,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<TransferCreditResult> DepositAsync(Uri apiUrl, string appId, string secretKey, string username, string requestId, decimal amount, CancellationToken cancellationToken = default)
 	{
-		System.Text.Json.Nodes.JsonNode parameters;
+		var parameters = default(JsonNode);
 
 		using (var stream = new MemoryStream())
 		{
@@ -83,17 +69,14 @@ internal class GameApiClient(
 				writer.WriteString("Username", username);
 				writer.WriteString("RequestID", requestId);
 				writer.WriteNumber("Amount", amount);
-				writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
 				writer.WriteEndObject();
 			}
 
 			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
 		}
 
-		var signature = signatureUtensil
-			.GenerateSignature(
-				source: parameters,
-				secretKey: secretKey);
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
 
 		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
 		queryStrings.Add("appid", appId);
@@ -103,7 +86,7 @@ internal class GameApiClient(
 			apiUrl: apiUrl,
 			queryStrings: queryStrings,
 			parameters: parameters,
-			logPrefix: "Deposit",
+			logPrefix: nameof(DepositAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
@@ -114,14 +97,9 @@ internal class GameApiClient(
 			JsonNode.ToJsonString());
 	}
 
-	public async ValueTask<GetCreditResult> GetCreditAsync(
-		Uri apiUrl,
-		string appId,
-		string secretKey,
-		string username,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<GetCreditResult> GetCreditAsync(Uri apiUrl, string appId, string secretKey, string username, CancellationToken cancellationToken = default)
 	{
-		System.Text.Json.Nodes.JsonNode parameters;
+		var parameters = default(JsonNode);
 
 		using (var stream = new MemoryStream())
 		{
@@ -130,17 +108,14 @@ internal class GameApiClient(
 				writer.WriteStartObject();
 				writer.WriteString("Method", "GC");
 				writer.WriteString("Username", username);
-				writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
 				writer.WriteEndObject();
 			}
 
 			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
 		}
 
-		var signature = signatureUtensil
-			.GenerateSignature(
-				source: parameters,
-				secretKey: secretKey);
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
 
 		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
 		queryStrings.Add("appid", appId);
@@ -150,7 +125,7 @@ internal class GameApiClient(
 			apiUrl: apiUrl,
 			queryStrings: queryStrings,
 			parameters: parameters,
-			logPrefix: "GetCredit",
+			logPrefix: nameof(GetCreditAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
@@ -164,14 +139,9 @@ internal class GameApiClient(
 			OutstandingCredit: JsonNode!["OutstandingCredit"]!.GetValue<decimal>());
 	}
 
-	public async ValueTask<string> PlayGameAsync(
-		Uri apiUrl,
-		string appId,
-		string secretKey,
-		string username,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<string> PlayGameAsync(Uri apiUrl, string appId, string secretKey, string username, CancellationToken cancellationToken = default)
 	{
-		System.Text.Json.Nodes.JsonNode parameters;
+		var parameters = default(JsonNode);
 
 		using (var stream = new MemoryStream())
 		{
@@ -180,17 +150,14 @@ internal class GameApiClient(
 				writer.WriteStartObject();
 				writer.WriteString("Method", "PLAY");
 				writer.WriteString("Username", username);
-				writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
 				writer.WriteEndObject();
 			}
 
 			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
 		}
 
-		var signature = signatureUtensil
-			.GenerateSignature(
-				source: parameters,
-				secretKey: secretKey);
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
 
 		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
 		queryStrings.Add("appid", appId);
@@ -200,7 +167,7 @@ internal class GameApiClient(
 			apiUrl: apiUrl,
 			queryStrings: queryStrings,
 			parameters: parameters,
-			logPrefix: "PlayGame",
+			logPrefix: nameof(PlayGameAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
@@ -209,16 +176,9 @@ internal class GameApiClient(
 			: JsonNode!["Token"]!.GetValue<string>();
 	}
 
-	public async ValueTask<string> RetrieveHistoryUrlAsync(
-		Uri apiUrl,
-		string appId,
-		string secretKey,
-		string oCode,
-		string gameType,
-		string language,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<string> RetrieveHistoryUrlAsync(Uri apiUrl, string appId, string secretKey, string oCode, string gameType, string language, CancellationToken cancellationToken = default)
 	{
-		System.Text.Json.Nodes.JsonNode parameters;
+		var parameters = default(JsonNode);
 
 		using (var stream = new MemoryStream())
 		{
@@ -229,17 +189,14 @@ internal class GameApiClient(
 				writer.WriteString("OCode", oCode);
 				writer.WriteString("Type", gameType);
 				writer.WriteString("Language", language);
-				writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
 				writer.WriteEndObject();
 			}
 
 			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
 		}
 
-		var signature = signatureUtensil
-			.GenerateSignature(
-				source: parameters,
-				secretKey: secretKey);
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
 
 		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
 		queryStrings.Add("appid", appId);
@@ -249,7 +206,7 @@ internal class GameApiClient(
 			apiUrl: apiUrl,
 			queryStrings: queryStrings,
 			parameters: parameters,
-			logPrefix: "RetrieveHistoryUrl",
+			logPrefix: nameof(RetrieveHistoryUrlAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
@@ -258,16 +215,9 @@ internal class GameApiClient(
 			: JsonNode!["Url"]!.GetValue<string>();
 	}
 
-	public async ValueTask<RetrieveTransactionsResult> RetrieveTransactionsByMinutesAsync(
-		Uri apiUrl,
-		string appId,
-		string secretKey,
-		DateTimeOffset startDate,
-		DateTimeOffset endDate,
-		string nextId,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<RetrieveTransactionsResult> RetrieveTransactionsByMinutesAsync(Uri apiUrl, string appId, string secretKey, DateTimeOffset startDate, DateTimeOffset endDate, string nextId, CancellationToken cancellationToken = default)
 	{
-		System.Text.Json.Nodes.JsonNode parameters;
+		var parameters = default(JsonNode);
 
 		using (var stream = new MemoryStream())
 		{
@@ -278,17 +228,14 @@ internal class GameApiClient(
 				writer.WriteString("StartDate", startDate.UtcDateTime.ToString("yyyy-MM-dd HH:mm"));
 				writer.WriteString("EndDate", endDate.UtcDateTime.ToString("yyyy-MM-dd HH:mm"));
 				writer.WriteString("NextId", string.IsNullOrEmpty(nextId) ? string.Empty : nextId);
-				writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
 				writer.WriteEndObject();
 			}
 
 			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
 		}
 
-		var signature = signatureUtensil
-			.GenerateSignature(
-				source: parameters,
-				secretKey: secretKey);
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
 
 		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
 		queryStrings.Add("appid", appId);
@@ -299,7 +246,7 @@ internal class GameApiClient(
 				apiUrl: apiUrl,
 				queryStrings: queryStrings,
 				parameters: parameters,
-				logPrefix: "RetrieveTransactionsByMinutes",
+				logPrefix: nameof(RetrieveTransactionsByMinutesAsync),
 				cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
@@ -314,7 +261,7 @@ internal class GameApiClient(
 		{
 			return new RetrieveTransactionsResult(
 				string.Empty,
-				Enumerable.Empty<TransactionResult>());
+				[]);
 		}
 
 		var transactionResults = new List<TransactionResult>();
@@ -384,14 +331,9 @@ internal class GameApiClient(
 		   (transactionResults.Count != 0) ? transactionResults : Enumerable.Empty<TransactionResult>());
 	}
 
-	public async ValueTask SignOutUserAsync(
-		Uri apiUrl,
-		string appId,
-		string secretKey,
-		string username,
-		CancellationToken cancellationToken = default)
+	public async ValueTask SignOutUserAsync(Uri apiUrl, string appId, string secretKey, string username, CancellationToken cancellationToken = default)
 	{
-		System.Text.Json.Nodes.JsonNode parameters;
+		var parameters = default(JsonNode);
 
 		using (var stream = new MemoryStream())
 		{
@@ -400,17 +342,14 @@ internal class GameApiClient(
 				writer.WriteStartObject();
 				writer.WriteString("Method", "SO");
 				writer.WriteString("Username", username);
-				writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
 				writer.WriteEndObject();
 			}
 
 			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
 		}
 
-		var signature = signatureUtensil
-			.GenerateSignature(
-				source: parameters,
-				secretKey: secretKey);
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
 
 		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
 		queryStrings.Add("appid", appId);
@@ -420,7 +359,7 @@ internal class GameApiClient(
 				apiUrl: apiUrl,
 				queryStrings: queryStrings,
 				parameters: parameters,
-				logPrefix: "SignOutUser",
+				logPrefix: nameof(SignOutUserAsync),
 				cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
@@ -430,14 +369,9 @@ internal class GameApiClient(
 		}
 	}
 
-	public async ValueTask<bool> VerifyTransferCreditAsync(
-		Uri apiUrl,
-		string appId,
-		string secretKey,
-		string requestId,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<bool> VerifyTransferCreditAsync(Uri apiUrl, string appId, string secretKey, string requestId, CancellationToken cancellationToken = default)
 	{
-		System.Text.Json.Nodes.JsonNode parameters;
+		var parameters = default(JsonNode);
 
 		using (var stream = new MemoryStream())
 		{
@@ -446,17 +380,14 @@ internal class GameApiClient(
 				writer.WriteStartObject();
 				writer.WriteString("Method", "TCH");
 				writer.WriteString("RequestID", requestId);
-				writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
 				writer.WriteEndObject();
 			}
 
 			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
 		}
 
-		var signature = signatureUtensil
-			.GenerateSignature(
-				source: parameters,
-				secretKey: secretKey);
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
 
 		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
 		queryStrings.Add("appid", appId);
@@ -466,23 +397,16 @@ internal class GameApiClient(
 			apiUrl: apiUrl,
 			queryStrings: queryStrings,
 			parameters: parameters,
-			logPrefix: "VerifyTransferCredit",
+			logPrefix: nameof(VerifyTransferCreditAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		return IsSuccessStatusCode && HttpStatusCode != HttpStatusCode.NotFound;
 	}
 
-	public async ValueTask<TransferCreditResult> WithdrawAsync(
-		Uri apiUrl,
-		string appId,
-		string secretKey,
-		string username,
-		string requestId,
-		decimal amount,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<TransferCreditResult> WithdrawAsync(Uri apiUrl, string appId, string secretKey, string username, string requestId, decimal amount, CancellationToken cancellationToken = default)
 	{
-		System.Text.Json.Nodes.JsonNode parameters;
+		var parameters = default(JsonNode);
 
 		using (var stream = new MemoryStream())
 		{
@@ -493,17 +417,14 @@ internal class GameApiClient(
 				writer.WriteString("Username", username);
 				writer.WriteString("RequestID", requestId);
 				writer.WriteNumber("Amount", -amount);
-				writer.WriteNumber("Timestamp", systemClock.CurrentTime.ToUnixTimeSeconds());
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
 				writer.WriteEndObject();
 			}
 
 			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
 		}
 
-		var signature = signatureUtensil
-			.GenerateSignature(
-				source: parameters,
-				secretKey: secretKey);
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
 
 		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
 		queryStrings.Add("appid", appId);
@@ -513,7 +434,7 @@ internal class GameApiClient(
 			apiUrl: apiUrl,
 			queryStrings: queryStrings,
 			parameters: parameters,
-			logPrefix: "Deposit",
+			logPrefix: nameof(WithdrawAsync),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
@@ -524,15 +445,112 @@ internal class GameApiClient(
 			JsonNode.ToJsonString());
 	}
 
-	private async ValueTask<(bool IsSuccessStatusCode, HttpStatusCode HttpStatusCode, System.Text.Json.Nodes.JsonNode? JsonNode)> PostAsync(
-		Uri apiUrl,
-		NameValueCollection queryStrings,
-		System.Text.Json.Nodes.JsonNode parameters,
-		string logPrefix,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<JsonNode> DomainGetWhitelistAsync(Uri apiUrl, string appId, string secretKey, CancellationToken cancellationToken = default)
 	{
-		logPrefix = $"{nameof(GameApiClient)}.{logPrefix}".ToLower();
+		var parameters = default(JsonNode);
 
+		using (var stream = new MemoryStream())
+		{
+			using (var writer = new Utf8JsonWriter(stream))
+			{
+				writer.WriteStartObject();
+				writer.WriteString("Method", "GDS");
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
+				writer.WriteEndObject();
+			}
+
+			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
+		}
+
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
+
+		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
+		queryStrings.Add("appid", appId);
+		queryStrings.Add("signature", signature);
+
+		var (IsSuccessStatusCode, HttpStatusCode, JsonNode) = await PostAsync(
+			apiUrl: apiUrl,
+			queryStrings: queryStrings,
+			parameters: parameters,
+			logPrefix: nameof(DomainGetWhitelistAsync),
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		return JsonNode!;
+	}
+
+	public async ValueTask<JsonNode> DomainRegisterWhitelistAsync(Uri apiUrl, string appId, string secretKey, IEnumerable<string> domains, CancellationToken cancellationToken = default)
+	{
+		var parameters = default(JsonNode);
+
+		using (var stream = new MemoryStream())
+		{
+			using (var writer = new Utf8JsonWriter(stream))
+			{
+				writer.WriteStartObject();
+				writer.WriteString("Method", "RDS");
+				writer.WriteString("Domain", string.Join(",", domains));
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
+				writer.WriteEndObject();
+			}
+
+			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
+		}
+
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
+
+		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
+		queryStrings.Add("appid", appId);
+		queryStrings.Add("signature", signature);
+
+		var (IsSuccessStatusCode, HttpStatusCode, JsonNode) = await PostAsync(
+			apiUrl: apiUrl,
+			queryStrings: queryStrings,
+			parameters: parameters,
+			logPrefix: nameof(DomainRegisterWhitelistAsync),
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		return JsonNode!;
+	}
+
+	public async ValueTask<JsonNode> DomainUnRegisterWhitelistAsync(Uri apiUrl, string appId, string secretKey, IEnumerable<string> domains, CancellationToken cancellationToken = default)
+	{
+		var parameters = default(JsonNode);
+
+		using (var stream = new MemoryStream())
+		{
+			using (var writer = new Utf8JsonWriter(stream))
+			{
+				writer.WriteStartObject();
+				writer.WriteString("Method", "UDS");
+				writer.WriteString("Domain", string.Join(",", domains));
+				writer.WriteNumber("Timestamp", timeProvider.GetUtcNow().ToUnixTimeSeconds());
+				writer.WriteEndObject();
+			}
+
+			parameters = System.Text.Json.Nodes.JsonNode.Parse(Encoding.UTF8.GetString(stream.ToArray()))!;
+		}
+
+		var signature = signatureUtensil.GenerateSignature(source: parameters, secretKey: secretKey);
+
+		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
+		queryStrings.Add("appid", appId);
+		queryStrings.Add("signature", signature);
+
+		var (IsSuccessStatusCode, HttpStatusCode, JsonNode) = await PostAsync(
+			apiUrl: apiUrl,
+			queryStrings: queryStrings,
+			parameters: parameters,
+			logPrefix: nameof(DomainUnRegisterWhitelistAsync),
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		return JsonNode!;
+	}
+
+	private async ValueTask<(bool IsSuccessStatusCode, HttpStatusCode HttpStatusCode, JsonNode? JsonNode)> PostAsync(Uri apiUrl, NameValueCollection queryStrings, JsonNode parameters, string logPrefix, CancellationToken cancellationToken = default)
+	{
 		var sw = Stopwatch.StartNew();
 
 		var url = $"{apiUrl.OriginalString}?{queryStrings}";
@@ -553,13 +571,14 @@ internal class GameApiClient(
 			responseMessage = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false) ?? string.Empty;
 		}
 
-		var apiLogEvent = new GameApiLogEvent
+		var apiLogEvent = new
 		{
 			Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
 			Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
 			Prefix = logPrefix,
 			ServerName = Environment.MachineName.NoLongerThan(128),
 			RequestHeaders = httpResponseMessage.RequestMessage?.Headers + httpResponseMessage.RequestMessage?.Content?.Headers?.ToString(),
+			RequestParameters = parameters.ToJsonString(),
 			RequestContent = (await content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false)).NoLongerThan(4096),
 			ResponseHeaders = httpResponseMessage.Headers.ToString(),
 			ResponseContent = responseMessage.NoLongerThan(4096),
